@@ -612,7 +612,10 @@ let superHerosRepository = (function(){
   }
 ]
 
-let $superHeroList = document.querySelector(".superhero__list")
+let $superHeroList = document.querySelector(".superhero__list");
+let $modal = document.getElementById("myModal");
+
+
 
 function add(obj){
 
@@ -620,18 +623,94 @@ function add(obj){
 
 function getAll(){
  // return repository
- for (let index = 0; index < repository.length; index++) {
-  // console.log(repository[index].name)
-  let $gridItem = document.createElement("div")
-  
-  // $gridItem.setAttribute("class", "grid__item")
-  $gridItem.classList.add("grid__item")
+for (let index = 0; index < repository.length; index++) {
+let $gridItem = document.createElement("div");
+let $buttonContainer = document.createElement("div");
 
-  $superHeroList.appendChild($gridItem)
+//creating img
+let $imgGridItem = document.createElement('img');
+
+//creating name tags
+let $superName = document.createElement('h3');
+let $realName = document.createElement('h5');
+
+//creating buttons
+let $showItemContent = document.createElement('button');
+let $removeItemContent = document.createElement('button');
+
+//names
+$superName.innerText= repository[index].name;
+$realName.innerText= repository[index].biography.fullName;
+
+//img attributes
+$imgGridItem.setAttribute("src",repository[index].images.md);
+$imgGridItem.setAttribute("width","100%");
+
+//for data
+$gridItem.setAttribute("data-id",repository[index].id);
+//ading classes
+$gridItem.classList.add("grid__item");
+$showItemContent.classList.add("green__button");
+$removeItemContent.classList.add("red__button");
+$buttonContainer.classList.add("button__container");
+
+
+
+
+//adding text to the buttons
+$showItemContent.textContent="Show";
+$removeItemContent.textContent="Remove"
+
+//adding buttons to the container
+$buttonContainer.appendChild($showItemContent);
+$buttonContainer.appendChild($removeItemContent);
+
+//appending 
+$gridItem.appendChild($imgGridItem);
+$gridItem.appendChild($superName);
+$gridItem.appendChild($realName);
+$gridItem.appendChild($buttonContainer);
+$superHeroList.appendChild($gridItem);
+
+//event listners
+//show button
+$showItemContent.addEventListener('click', function(e){
+let id = e.target.parentNode.parentNode.getAttribute("data-id");
+let $close = document.querySelector(".close");
+let $modalBody = document.querySelector(".modal-body");
+
+
+let item = repository.find(function(el){
+
+  return el.id == id 
+})
+
+let htmlContent = "<div>"+ item.name  +"</div>";
+
+
+//show the opnening dialouge for show button
+$modalBody.innerHTML = htmlContent;
+$modal.style.display="block"
+$close.addEventListener('click',close)
+
+
+})
+
+$removeItemContent.addEventListener('click', function(e){
+    e.target.parentNode.parentNode.remove();
+
+})
+
  }
+
+
 
 }
 
+function close()
+{
+  $modal.style.display = "none"
+}
 return{
  getAll : getAll,
  add : add
